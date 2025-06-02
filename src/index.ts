@@ -1,9 +1,17 @@
 import express, { Request, Response } from "express"
 import dotenv from "dotenv"
 import { listaTODOs, TODO } from "./data"
+import bodyParser from "body-parser"
 
 dotenv.config()
 const app = express()
+
+// Configuración del servidor HTTP para recibir peticiones
+// por el payload (cuerpo) y convertirlos en objetos js/ts
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
+    extended : true
+}))
 
 const PORT = process.env.PORT
 
@@ -35,6 +43,20 @@ app.get("/todos/:id", (req : Request, resp : Response) => {
     }
 
     resp.json(todoEncontrado)
+})
+
+app.post("/todos", (req : Request, resp : Response) => {
+    const todo = req.body
+    const todos = listaTODOs
+
+    todos.push({
+        descripcion : todo.descripcion,
+        id : new Date().getTime()
+    })
+
+    resp.json({
+        msg : ""
+    })
 })
 
 app.listen(PORT, () => {

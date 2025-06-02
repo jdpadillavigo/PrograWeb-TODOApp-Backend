@@ -5,7 +5,7 @@
 ### Obtener TODOs
 
 - Path : "/todos"
-- Metodo : GET
+- Método : GET
 - Input : -
 - Output
 
@@ -19,7 +19,7 @@
 ### Obtener TODO
 
 - Path : "/todos"
-- Metodo : GET
+- Método : GET
 - Input : "/:id" : ID del TODO.
 - Output
 
@@ -27,4 +27,24 @@
 [
     { "id" : 1, "descripcion" : "desc de todo 1" }
 ]
+```
+
+### Registrar TODO
+
+- Path : "/todos"
+- Método : POST
+- Input
+
+``` json
+{
+    "descripcion" : "bla bla bla"
+}
+```
+
+- Output
+
+``` json
+{
+    "msg" : ""
+}
 ```
