@@ -48,3 +48,41 @@
     "msg" : ""
 }
 ```
+
+### Modificar TODO
+
+- Path : "/todos"
+- Método : PUT
+- Input
+
+``` json
+
+Path Parameter: /todos/2
+{
+    "descripcion" : "nuevo todo"
+}
+```
+
+- Output
+
+``` json
+{
+    "msg" : ""
+}
+```
+
+### Eliminar TODO
+
+- Path : "/todos"
+- Método : DELETE
+- Input
+
+Path Parameter: "/todos/2"
+
+- Output
+
+``` json
+{
+    "msg" : ""
+}
+```
