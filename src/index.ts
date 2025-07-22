@@ -46,25 +46,24 @@ app.get("/todos", async (req : Request, resp : Response) => {
     resp.json(todos)
 })
 
-app.get("/todos/:id", (req : Request, resp : Response) => {
-    const id = req.params.id
+app.get("/todos/:id", async (req : Request, resp : Response) => {
+    const prisma = new PrismaClient()
+    const id = parseInt(req.params.id)
 
-    let todoEncontrado : TODO | null = null
-    for (let todo of listaTODOs) {
-        if (todo.id.toString() == id) {
-            todoEncontrado = todo
-            break
+    const todo = await prisma.todo.findUnique({
+        where : {
+            id : id
         }
-    }
-
-    if (todoEncontrado == null) {
+    })
+    
+    if (todo == null) {
         // Error: No se encontró
         resp.status(400).json({
             msg : "Código incorrecto"
         })
     }
 
-    resp.json(todoEncontrado)
+    resp.json(todo)
 })
 
 app.post("/todos", async (req : Request, resp : Response) => {
@@ -88,10 +87,10 @@ app.post("/todos", async (req : Request, resp : Response) => {
     })
 })
 
-app.put("/todos/:id", (req : Request, resp : Response) => {
+app.put("/todos/:id", async (req : Request, resp : Response) => {
+    const prisma = new PrismaClient()
     const todo = req.body
-    const todoId = req.params.id
-    const todos = listaTODOs
+    const todoId = parseInt(req.params.id)
 
     if (todoId == undefined) {
         resp.status(400).json({
@@ -100,60 +99,51 @@ app.put("/todos/:id", (req : Request, resp : Response) => {
         return
     }
 
-    if (todo.descripcion == undefined) {
+    try{
+        const todoModificado = await prisma.todo.update({
+            where : {
+                id : todoId
+            },
+            data : todo
+        })
+
+        resp.json({
+            msg : "",
+            todo : todoModificado
+        })
+    } catch(e) {
         resp.status(400).json({
-            msg : "Debe enviar un campo descripción"
+            msg : "No existe TODO con ese id"
+        })
+    }
+})
+
+app.delete("/todos/:id", async (req : Request, resp : Response) => {
+    const prisma = new PrismaClient()
+    const todoId = parseInt(req.params.id)
+
+    if (todoId == undefined) {
+        resp.status(400).json({
+            msg : "Debe enviar un ID de TODO"
         })
         return
     }
 
-    for (let t of todos) {
-        if (t.id.toString() == todoId) {
-            t.descripcion = todo.descripcion
-
-            resp.json({
-                msg : ""
-            })
-        }
-    }
-
-    resp.status(400).json({
-        msg : "No existe TODO con ese id"
-    })
-})
-
-app.delete("/todos/:id", (req : Request, resp : Response) => {
-    const todoId = req.params.id
-    const todos = listaTODOs
-
-    const indiceAEliminar = listaTODOs.findIndex((t : TODO) => {
-        return t.id.toString() == todoId
-    })
-
-    if (indiceAEliminar == -1) {
+    try {
+        await prisma.todo.delete({
+            where : {
+                id : todoId
+            }
+        })
+        resp.json({
+            msg : ""
+        })
+    } catch(e) {
         resp.status(400).json({
             msg : "No existe TODO con ese id"
         })
         return
     }
-
-    todos.splice(indiceAEliminar, 1)
-
-    resp.json({
-        msg : ""
-    })
-
-    // let indice = 0
-    // for (let t of todos) {
-    //     if (t.id.toString() == todoId) {
-    //         todos.splice(indice, 1)
-    //         resp.json({
-    //             msg : ""
-    //         })
-    //         return
-    //     }
-    //     indice++
-    // }
 })
 
 app.listen(PORT, () => {
