@@ -67,9 +67,9 @@ app.get("/todos/:id", (req : Request, resp : Response) => {
     resp.json(todoEncontrado)
 })
 
-app.post("/todos", (req : Request, resp : Response) => {
+app.post("/todos", async (req : Request, resp : Response) => {
+    const prisma = new PrismaClient()
     const todo = req.body
-    const todos = listaTODOs
 
     if (todo.descripcion == undefined) {
         resp.status(400).json({
@@ -78,13 +78,13 @@ app.post("/todos", (req : Request, resp : Response) => {
         return
     }
 
-    todos.push({
-        descripcion : todo.descripcion,
-        id : new Date().getTime()
+    const todoCreado = await prisma.todo.create({
+        data : todo
     })
 
     resp.json({
-        msg : ""
+        msg : "",
+        todo : todoCreado
     })
 })
 
