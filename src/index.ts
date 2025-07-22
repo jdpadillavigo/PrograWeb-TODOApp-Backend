@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import { listaTODOs, TODO } from "./data"
 import bodyParser from "body-parser"
 import cors from "cors"
+import { PrismaClient } from "./generated/prisma"
 
 dotenv.config()
 const app = express()
@@ -24,8 +25,24 @@ app.get("/", (req : Request, resp : Response) => {
     resp.send("Endpoint raíz")
 })
 
-app.get("/todos", (req : Request, resp : Response) => {
-    const todos = listaTODOs
+app.get("/todos", async (req : Request, resp : Response) => {
+    const prisma = new PrismaClient()
+
+    const estado = req.query.estado
+
+    if (estado == undefined) {
+        // No hay estado, devolvemos todos los TODOs
+        const todos = await prisma.todo.findMany()
+        resp.json(todos)
+        return
+    }
+
+    // Devolvemos los TODOs filtrados por estado
+    const todos = await prisma.todo.findMany({
+        where : {
+            estado : estado == "0" ? false : true
+        }
+    })
     resp.json(todos)
 })
 

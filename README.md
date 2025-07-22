@@ -6,7 +6,7 @@
 
 - Path : "/todos"
 - Método : GET
-- Input : -
+- Input : Query Parameter("estado") = 0 o 1
 - Output
 
 ``` json
