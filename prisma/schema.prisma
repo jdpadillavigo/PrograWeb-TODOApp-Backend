@@ -18,4 +18,30 @@ model Todo {
   id Int @id @default(autoincrement())
   descripcion String
   estado Boolean
+  usuarioId Int?
+  usuario Usuario? @relation(fields: [usuarioId], references: [id])
+}
+
+model InfPersonal {
+  id Int @id @default(autoincrement())
+  telefono String
+  direccion String
+  usuarioId Int @unique
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+}
+
+model Usuario {
+  id Int @id @default(autoincrement())
+  username String @db.VarChar(20)
+  password String
+  infPersonal InfPersonal?
+  todos Todo[]
+  categorias Categoria[] @relation("CategoriaXUsuario")
+}
+
+model Categoria {
+  id Int @id @default(autoincrement())
+  nombre String
+  estado Boolean
+  usuarios Usuario[] @relation("CategoriaXUsuario")
 }
