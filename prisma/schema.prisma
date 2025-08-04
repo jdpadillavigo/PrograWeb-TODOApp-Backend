@@ -20,6 +20,8 @@ model Todo {
   estado Boolean
   usuarioId Int?
   usuario Usuario? @relation(fields: [usuarioId], references: [id])
+  categoriaId Int?
+  categoria Categoria? @relation(fields: [categoriaId], references: [id])
 }
 
 model InfPersonal {
@@ -44,4 +46,5 @@ model Categoria {
   nombre String
   estado Boolean
   usuarios Usuario[] @relation("CategoriaXUsuario")
+  todos Todo[]
 }
