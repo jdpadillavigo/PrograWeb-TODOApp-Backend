@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import bodyParser from "body-parser"
 import cors from "cors"
 import TodosController from "./controllers/TodosController"
+import UsuariosController from "./controllers/UsuariosController"
 
 dotenv.config()
 const app = express()
@@ -26,6 +27,7 @@ app.get("/", (req : Request, resp : Response) => {
 
 // Configuración entidad TODO
 app.use("/todos", TodosController())
+app.use("/usuarios", UsuariosController())
 
 app.listen(PORT, () => {
     console.log(`Se inició servidor en puerto ${PORT}`)
