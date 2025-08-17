@@ -16,7 +16,12 @@ app.use(bodyParser.urlencoded({
     extended : true
 }))
 
-app.use(cors()) // Configurando cors
+app.use(cors({
+    origin : process.env.FRONTEND_URL,
+    methods : ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders : ["usuarioid", "content-type"],
+    credentials : true
+})) // Configurando cors
 
 app.use(express.static("assets"))
 
