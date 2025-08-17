@@ -5,7 +5,7 @@ const UsuariosController = () => {
     const router = express.Router()
 
     // /usuarios/login
-    router.post("/login", (req : Request, resp : Response) => {
+    router.post("/login", async (req : Request, resp : Response) => {
         const prisma = new PrismaClient()
         const requestData = req.body
 
@@ -19,7 +19,10 @@ const UsuariosController = () => {
             return
         }
 
-        const usuario = prisma.usuario.findFirst({
+        const usuario = await prisma.usuario.findFirst({
+            omit : {
+                password : true
+            },
             where : {
                 username : username,
                 password : password
