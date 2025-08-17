@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(cors({
     origin : process.env.FRONTEND_URL,
-    methods : ["GET", "POST", "PUT", "DELETE"],
+    methods : ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders : ["usuarioid", "content-type"],
     credentials : true
 })) // Configurando cors
